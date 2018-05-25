@@ -34,4 +34,6 @@
     <string name="scorelabel">Score :</string>
     <string name="score">Score</string>
     <string name="name">Player</string>
+    <string name="start_two_player">Start Two Player Game</string>
+    <string name="start_single_player">Start Single Player Game</string>
 </resources>

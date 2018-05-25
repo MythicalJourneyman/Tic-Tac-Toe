@@ -9,7 +9,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this, GameActivity.class));
+        startActivity(HomeActivity.getStartIntent(this));
         finish();
     }
 }
