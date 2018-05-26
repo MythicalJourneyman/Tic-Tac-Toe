@@ -19,7 +19,7 @@
             android:src="@drawable/ic_close_white_36dp"/>
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/scoreLabel"
+            android:id="@+id/movesLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/close"
@@ -28,7 +28,7 @@
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             android:layout_toRightOf="@+id/close"
-            android:text="@string/scorelabel"
+            android:text="@string/moves_label"
             android:textColor="#fff"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -39,40 +39,108 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/close"
             android:layout_margin="4dp"
-            android:layout_toRightOf="@+id/scoreLabel"
+            android:layout_toRightOf="@+id/movesLabel"
             android:text="0"
             android:textColor="#fff"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/playerLabel"
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/playerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/close"
-            android:layout_margin="4dp"
-            android:gravity="center"
-            android:text="@string/player_name"
-            android:textSize="20sp"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/playerName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/playerLabel"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/movesLabel"
             android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textAllCaps="true"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/player1Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="Player 1"
+                    android:textAllCaps="true"
+                    android:textColor="#fff"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/player1Symbol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="X"
+                    android:textAllCaps="true"
+                    android:textColor="#fff"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+            </android.support.v7.widget.LinearLayoutCompat>
+
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/versus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/versus"
+                android:textAllCaps="true"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/player2Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="Player 2"
+                    android:textAllCaps="true"
+                    android:textColor="#fff"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/player2Symbol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="O"
+                    android:textAllCaps="true"
+                    android:textColor="#fff"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v7.widget.LinearLayoutCompat>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/playerName"
+            android:layout_below="@+id/playerContainer"
             android:layout_margin="4dp"/>
     </RelativeLayout>
 </layout>

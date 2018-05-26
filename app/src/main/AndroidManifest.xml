@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".views.activities.HomeActivity">
         </activity>
+        <activity android:name=".views.activities.EditNamesActivity">
+        </activity>
     </application>
 
 </manifest>

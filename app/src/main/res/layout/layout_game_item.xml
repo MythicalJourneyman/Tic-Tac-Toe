@@ -23,7 +23,7 @@
                 android:layout_margin="4dp"
                 android:gravity="center"
                 android:textColor="#000"
-                android:textSize="32sp"
+                android:textSize="48sp"
                 android:textStyle="bold"/>
 
         </FrameLayout>

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,41 +34,37 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class GameActivity extends AppCompatActivity {
-    private final static String PLAYER_NAME = "name";
+    private final static String PLAYER_1_NAME = "player_1_name";
+    private final static String PLAYER_2_NAME = "player_2_name";
+    private final static String PLAYER_1_SYMBOL = "player_1_symbol";
+    private final static String PLAYER_2_SYMBOL = "player_2_symbol";
     private final static String GRID_SIZE = "grid";
     private int mGridSize = 3;
 
     /**
      * intent to start the game. It takes player name .
      *
-     * @param context    context
-     * @param playerName name of the player
+     * @param context     context
+     * @param player1Name name of the player 1
+     * @param player2Name name of the player 2
      * @return intent
      */
-    public static Intent getStartIntent(Context context, String playerName) {
+    public static Intent getStartIntentforTwoPlayer(Context context, String player1Name, String player2Name, String player1Symbol, String player2Symbol) {
         Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra(PLAYER_NAME, playerName);
+        intent.putExtra(PLAYER_1_NAME, player1Name);
+        intent.putExtra(PLAYER_2_NAME, player2Name);
+        intent.putExtra(PLAYER_1_SYMBOL, player1Symbol);
+        intent.putExtra(PLAYER_2_SYMBOL, player2Symbol);
         return intent;
     }
 
-    /**
-     * intent to start the game. It takes player name
-     * and the number of columns for the grid.
-     *
-     * @param context    context
-     * @param playerName name of the player
-     * @param gridSize   columns of the square grid
-     * @return intent
-     */
-    public static Intent getStartIntent(Context context, String playerName, int gridSize) {
+    public static Intent getStartIntentforSinglePlayer(Context context, String player1Name) {
         Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra(PLAYER_NAME, playerName);
-        intent.putExtra(GRID_SIZE, gridSize);
+        intent.putExtra(PLAYER_1_NAME, player1Name);
         return intent;
     }
 
     private ActivityGameBinding mBinding;
-
 
     @Override
     public void onBackPressed() {
@@ -80,17 +77,29 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_game);
 
-        // get player name from intent
-        String playerName = getIntent().getStringExtra(PLAYER_NAME);
+        // get player names from intent
+        String player1Name = getIntent().getStringExtra(PLAYER_1_NAME);
+        String player2Name = getIntent().getStringExtra(PLAYER_2_NAME);
+        String player1Symbol = getIntent().getStringExtra(PLAYER_1_SYMBOL);
+        String player2Symbol = getIntent().getStringExtra(PLAYER_2_SYMBOL);
+
+        if (TextUtils.isEmpty(player2Name)) {
+            player2Name = "Computer";
+        }
 
         // get grid size from intent.
         // set default grid size to 4.
         mGridSize = getIntent().getIntExtra(GRID_SIZE, 3);
 
-        initializeViews();
+        initializeViews(player1Name, player2Name, player1Symbol, player2Symbol);
     }
 
-    private void initializeViews() {
+    private void initializeViews(String player1Name, String player2Name, String player1Symbol, String player2Symbol) {
+        // set player names and symbols
+        mBinding.player1Name.setText(player1Name);
+        mBinding.player2Name.setText(player2Name);
+        mBinding.player1Symbol.setText(player1Symbol);
+        mBinding.player2Symbol.setText(player2Symbol);
         //finish game on back press
         mBinding.close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,13 +139,13 @@ public class GameActivity extends AppCompatActivity {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
-//                        finish();
+                        finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-//                        finish();
+                        finish();
                     }
                 });
     }
@@ -187,13 +196,7 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (!isGameOver) {
-                            if (mCurrentPlayer.equals("X")) {
-                                updatePosition(holder, item, "X");
-                                mCurrentPlayer = "O";
-                            } else {
-                                updatePosition(holder, item, "O");
-                                mCurrentPlayer = "X";
-                            }
+                            updatePosition(holder, item);
                         }
                     }
                 });
@@ -224,14 +227,23 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        private void updatePosition(ItemHolder holder, Item item, String player) {
+        private void updatePosition(ItemHolder holder, Item item) {
             int position = holder.getAdapterPosition();
             mTotalMoves++;
+            mBinding.score.setText(String.valueOf(mTotalMoves));
             item.checked = true;
             // set value
-            mMoves[position] = player;
+            mMoves[position] = mCurrentPlayer;
 
             holder.mBinding.item.setText(mMoves[position]);
+
+            if (mCurrentPlayer.equals("X")) {
+                holder.mBinding.item.setTextColor(0xffEF6C00);
+                mCurrentPlayer = "O";
+            } else {
+                holder.mBinding.item.setTextColor(0xFF558B2F);
+                mCurrentPlayer = "X";
+            }
 //            animate(holder, item);
 
             // check score
@@ -262,6 +274,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
             holder.mBinding.container.setOnClickListener(null);
+
 
         }
 

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="12dp"
+        tools:context=".views.activities.EditNamesActivity">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close_white_36dp"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_white_36dp"
+            app:layout_constraintRight_toRightOf="@+id/container"/>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/player1Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="@string/player1"
+            android:textColor="#fff"
+            android:textSize="48sp"
+            app:layout_constraintTop_toBottomOf="@+id/close"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/player1Symbol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="X"
+            android:textColor="#fff"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/player1Name"/>
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/player1Help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/symbol_edit_help"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/player1Symbol"/>
+
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/player2Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:gravity="center"
+            android:text="@string/player2"
+            android:textColor="#fff"
+            android:textSize="48sp"
+            app:layout_constraintTop_toBottomOf="@+id/player1Help"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/player2Symbol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="O"
+            android:textColor="#fff"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/player2Name"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/player2Help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/symbol_edit_help"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/player2Symbol"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.mythicaljourneyman.tic_tac_toe.R;
 import com.mythicaljourneyman.tic_tac_toe.databinding.ActivityHomeBinding;
+import com.mythicaljourneyman.tic_tac_toe.preferences.AppPreferences;
 
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding mBinding;
@@ -25,7 +26,13 @@ public class HomeActivity extends AppCompatActivity {
         mBinding.twoPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(GameActivity.getStartIntent(HomeActivity.this,"YouWHo"));
+                startActivity(GameActivity.getStartIntentforTwoPlayer(HomeActivity.this, AppPreferences.getPlayer1Name(HomeActivity.this), AppPreferences.getPlayer2Name(HomeActivity.this), AppPreferences.getPlayer1Symbol(HomeActivity.this), AppPreferences.getPlayer2Symbol(HomeActivity.this)));
+            }
+        });
+        mBinding.chooseNames.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(EditNamesActivity.getStartIntent(HomeActivity.this));
             }
         });
     }

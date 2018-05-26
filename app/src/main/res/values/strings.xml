@@ -31,9 +31,14 @@
     <string name="start_game">Start a New Game</string>
     <string name="title">Tic-Tac-Toe</string>
     <string name="player_name">Player Name</string>
-    <string name="scorelabel">Score :</string>
+    <string name="player1">Player 1</string>
+    <string name="player2">Player 2</string>
+    <string name="moves_label">Moves :</string>
     <string name="score">Score</string>
     <string name="name">Player</string>
     <string name="start_two_player">Start Two Player Game</string>
     <string name="start_single_player">Start Single Player Game</string>
+    <string name="versus">v / s</string>
+    <string name="choose_names">Edit Player Names</string>
+    <string name="symbol_edit_help">Tap to change symbol.</string>
 </resources>
