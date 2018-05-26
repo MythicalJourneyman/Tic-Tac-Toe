@@ -6,6 +6,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/game_window_background"
         tools:context=".views.activities.GameActivity">
 
         <android.support.v7.widget.AppCompatImageView
@@ -49,15 +51,17 @@
             android:id="@+id/playerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_below="@+id/movesLabel"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.AppCompatTextView
@@ -70,7 +74,7 @@
                     android:text="Player 1"
                     android:textAllCaps="true"
                     android:textColor="#fff"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"/>
 
                 <android.support.v7.widget.AppCompatTextView
@@ -83,7 +87,7 @@
                     android:text="X"
                     android:textAllCaps="true"
                     android:textColor="#fff"
-                    android:textSize="24sp"
+                    android:textSize="32sp"
                     android:textStyle="bold"/>
             </android.support.v7.widget.LinearLayoutCompat>
 
@@ -106,6 +110,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.AppCompatTextView
@@ -118,7 +123,7 @@
                     android:text="Player 2"
                     android:textAllCaps="true"
                     android:textColor="#fff"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"/>
 
                 <android.support.v7.widget.AppCompatTextView
@@ -131,16 +136,94 @@
                     android:text="O"
                     android:textAllCaps="true"
                     android:textColor="#fff"
-                    android:textSize="24sp"
+                    android:textSize="32sp"
                     android:textStyle="bold"/>
             </android.support.v7.widget.LinearLayoutCompat>
         </android.support.v7.widget.LinearLayoutCompat>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/playerContainer"
-            android:layout_margin="4dp"/>
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="24dp"
+            android:animateLayoutChanges="true">
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/list"
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/line_background"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/line_background"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/list"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:padding="4dp">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="@drawable/line_background"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="@drawable/line_background"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

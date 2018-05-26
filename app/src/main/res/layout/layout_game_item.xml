@@ -1,40 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.mythicaljourneyman.tic_tac_toe.views.widgets.SquareFrameLayout
+    <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:orientation="horizontal">
+        android:animateLayoutChanges="true"
+        app:cardBackgroundColor="#0000"
+        app:cardElevation="0dp">
 
-        <FrameLayout
-            android:id="@+id/front"
+        <com.mythicaljourneyman.tic_tac_toe.views.widgets.SquareFrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/tileFrontColor">
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/item"
+            <FrameLayout
+                android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="4dp"
-                android:gravity="center"
-                android:textColor="#000"
-                android:textSize="48sp"
-                android:textStyle="bold"/>
+                android:animateLayoutChanges="true">
 
-        </FrameLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="#000"
+                    android:textSize="48sp"
+                    android:textStyle="bold"/>
 
-        <FrameLayout
-            android:visibility="gone"
-            android:id="@+id/back"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/tileBackColor">
+            </FrameLayout>
 
-        </FrameLayout>
-    </com.mythicaljourneyman.tic_tac_toe.views.widgets.SquareFrameLayout>
+            <FrameLayout
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fff"
+                android:visibility="gone">
+
+            </FrameLayout>
+        </com.mythicaljourneyman.tic_tac_toe.views.widgets.SquareFrameLayout>
+    </android.support.v7.widget.CardView>
+
 </layout>

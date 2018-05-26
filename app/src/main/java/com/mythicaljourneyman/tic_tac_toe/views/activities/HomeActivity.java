@@ -26,7 +26,13 @@ public class HomeActivity extends AppCompatActivity {
         mBinding.twoPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(GameActivity.getStartIntentforTwoPlayer(HomeActivity.this, AppPreferences.getPlayer1Name(HomeActivity.this), AppPreferences.getPlayer2Name(HomeActivity.this), AppPreferences.getPlayer1Symbol(HomeActivity.this), AppPreferences.getPlayer2Symbol(HomeActivity.this)));
+                startActivity(GameActivity.getStartIntentForTwoPlayer(HomeActivity.this, AppPreferences.getPlayer1Name(HomeActivity.this), AppPreferences.getPlayer2Name(HomeActivity.this), AppPreferences.getPlayer1Symbol(HomeActivity.this), AppPreferences.getPlayer2Symbol(HomeActivity.this)));
+            }
+        });
+        mBinding.singlePlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(GameActivity.getStartIntentForSinglePlayer(HomeActivity.this, AppPreferences.getPlayer1Name(HomeActivity.this), AppPreferences.getPlayer1Symbol(HomeActivity.this)));
             }
         });
         mBinding.chooseNames.setOnClickListener(new View.OnClickListener() {
