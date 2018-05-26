@@ -25,13 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
 public class GameActivity extends AppCompatActivity {
     private final static String PLAYER_1_NAME = "player_1_name";
     private final static String PLAYER_2_NAME = "player_2_name";
@@ -157,25 +150,7 @@ public class GameActivity extends AppCompatActivity {
      * finish game. save player score and exit.
      */
     private void endGame() {
-        Observable.create(new ObservableOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                e.onNext(true);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        finish();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                        finish();
-                    }
-                });
+        finish();
     }
 
     private void playClick() {
@@ -334,11 +309,11 @@ public class GameActivity extends AppCompatActivity {
             }
 
             if (mCurrentPlayer.equals("X")) {
-                if (item.winner){
+                if (item.winner) {
                     holder.mBinding.item.setTextColor(Color.WHITE);
                     holder.mBinding.container.setCardBackgroundColor(mColorX);
 
-                }else{
+                } else {
                     holder.mBinding.item.setTextColor(mColorX);
 
                 }
@@ -351,12 +326,12 @@ public class GameActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                if (item.winner){
+                if (item.winner) {
                     holder.mBinding.item.setTextColor(Color.WHITE);
                     holder.mBinding.container.setCardBackgroundColor(mColorO);
                     holder.mBinding.container.setCardElevation(12);
 
-                }else{
+                } else {
                     holder.mBinding.item.setTextColor(mColorO);
 
                 }
