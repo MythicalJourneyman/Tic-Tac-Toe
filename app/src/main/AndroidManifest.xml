@@ -11,6 +11,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".views.activities.SplashActivity"
+            android:configChanges="screenLayout|fontScale|layoutDirection|orientation"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -18,11 +20,22 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".views.activities.GameActivity">
+        <activity
+            android:name=".views.activities.GameActivity"
+            android:configChanges="screenLayout|fontScale|layoutDirection|orientation"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/GameTheme">
         </activity>
-        <activity android:name=".views.activities.HomeActivity">
+        <activity
+            android:name=".views.activities.HomeActivity"
+            android:configChanges="screenLayout|fontScale|layoutDirection|orientation"
+            android:screenOrientation="sensorPortrait">
         </activity>
-        <activity android:name=".views.activities.EditNamesActivity">
+        <activity
+            android:name=".views.activities.EditNamesActivity"
+            android:configChanges="screenLayout|fontScale|layoutDirection|orientation"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/GameTheme">
         </activity>
     </application>
 

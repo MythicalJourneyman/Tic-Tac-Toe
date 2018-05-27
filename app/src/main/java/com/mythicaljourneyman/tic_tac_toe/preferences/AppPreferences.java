@@ -13,6 +13,7 @@ public class AppPreferences {
     private static final String PLAYER_2_NAME = "player_2_name";
     private static final String PLAYER_1_SYMBOL = "player_1_symbol";
     private static final String PLAYER_2_SYMBOL = "player_2_symbol";
+    private static final String GRID_SIZE = "grid_size";
 
 
     private static SharedPreferences getPreferences(Context context) {
@@ -44,6 +45,10 @@ public class AppPreferences {
         return getPreferences(context).getString(PLAYER_2_SYMBOL, "O");
     }
 
+    public static int getGridSize(Context context) {
+        return getPreferences(context).getInt(GRID_SIZE, 3);
+    }
+
     public static void setPlayer1Name(Context context, String value) {
         SharedPreferences preferences = getPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -64,10 +69,18 @@ public class AppPreferences {
         editor.putString(PLAYER_1_SYMBOL, value);
         editor.commit();
     }
+
     public static void setPlayer2Symbol(Context context, String value) {
         SharedPreferences preferences = getPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(PLAYER_2_SYMBOL, value);
+        editor.commit();
+    }
+
+    public static void setGridSize(Context context, int gridSize) {
+        SharedPreferences preferences = getPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(GRID_SIZE, gridSize);
         editor.commit();
     }
 }

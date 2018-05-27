@@ -41,20 +41,41 @@ public class GameActivity extends AppCompatActivity {
      * @param player2Name name of the player 2
      * @return intent
      */
-    public static Intent getStartIntentForTwoPlayer(Context context, String player1Name, String player2Name, String player1Symbol, String player2Symbol) {
+    public static Intent getStartIntentForTwoPlayer3(Context context, String player1Name, String player2Name, String player1Symbol, String player2Symbol) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(PLAYER_1_NAME, player1Name);
         intent.putExtra(PLAYER_2_NAME, player2Name);
         intent.putExtra(PLAYER_1_SYMBOL, player1Symbol);
         intent.putExtra(PLAYER_2_SYMBOL, player2Symbol);
+        intent.putExtra(GRID_SIZE, 3);
         return intent;
     }
 
-    public static Intent getStartIntentForSinglePlayer(Context context, String player1Name, String player1Symbol, String player2Symbol) {
+    public static Intent getStartIntentForTwoPlayer4(Context context, String player1Name, String player2Name, String player1Symbol, String player2Symbol) {
+        Intent intent = new Intent(context, GameActivity.class);
+        intent.putExtra(PLAYER_1_NAME, player1Name);
+        intent.putExtra(PLAYER_2_NAME, player2Name);
+        intent.putExtra(PLAYER_1_SYMBOL, player1Symbol);
+        intent.putExtra(PLAYER_2_SYMBOL, player2Symbol);
+        intent.putExtra(GRID_SIZE, 4);
+        return intent;
+    }
+
+    public static Intent getStartIntentForSinglePlayer3(Context context, String player1Name, String player1Symbol, String player2Symbol) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(PLAYER_1_NAME, player1Name);
         intent.putExtra(PLAYER_1_SYMBOL, player1Symbol);
         intent.putExtra(PLAYER_2_SYMBOL, player2Symbol);
+        intent.putExtra(GRID_SIZE, 3);
+        return intent;
+    }
+
+    public static Intent getStartIntentForSinglePlayer4(Context context, String player1Name, String player1Symbol, String player2Symbol) {
+        Intent intent = new Intent(context, GameActivity.class);
+        intent.putExtra(PLAYER_1_NAME, player1Name);
+        intent.putExtra(PLAYER_1_SYMBOL, player1Symbol);
+        intent.putExtra(PLAYER_2_SYMBOL, player2Symbol);
+        intent.putExtra(GRID_SIZE, 4);
         return intent;
     }
 
@@ -93,6 +114,11 @@ public class GameActivity extends AppCompatActivity {
         // get grid size from intent.
         // set default grid size to 4.
         mGridSize = getIntent().getIntExtra(GRID_SIZE, 3);
+        if (mGridSize == 3) {
+            mBinding.threeGrid.setVisibility(View.VISIBLE);
+        } else if (mGridSize == 4) {
+            mBinding.fourGrid.setVisibility(View.VISIBLE);
+        }
 
         initializeViews(player1Name, player2Name, player1Symbol, player2Symbol, isComputer);
     }
@@ -103,8 +129,8 @@ public class GameActivity extends AppCompatActivity {
         // set player names and symbols
         mBinding.player1Name.setText(player1Name);
         mBinding.player2Name.setText(player2Name);
-        mBinding.player1Symbol.setText(player1Symbol);
-        mBinding.player2Symbol.setText(player2Symbol);
+        setPlayer1Symbol(player1Symbol);
+        setPlayer2Symbol(player2Symbol);
         //finish game on back press
         mBinding.close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,10 +166,38 @@ public class GameActivity extends AppCompatActivity {
     private void highlightPlayer(int player, int color, int colorPlain) {
         if (player == 0) {
             mBinding.player1Symbol.setTextColor(color);
+            mBinding.player1Icon.setTextColor(color);
             mBinding.player2Symbol.setTextColor(colorPlain);
+            mBinding.player2Icon.setTextColor(colorPlain);
         } else {
             mBinding.player1Symbol.setTextColor(colorPlain);
+            mBinding.player1Icon.setTextColor(colorPlain);
             mBinding.player2Symbol.setTextColor(color);
+            mBinding.player2Icon.setTextColor(color);
+        }
+    }
+
+    private void setPlayer1Symbol(String symbol) {
+        if (symbol.equalsIgnoreCase("X") || symbol.equalsIgnoreCase("O")) {
+            mBinding.player1Symbol.setText(symbol);
+            mBinding.player1Symbol.setVisibility(View.VISIBLE);
+            mBinding.player1Icon.setVisibility(View.GONE);
+        } else {
+            mBinding.player1Icon.setText(symbol);
+            mBinding.player1Symbol.setVisibility(View.GONE);
+            mBinding.player1Icon.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setPlayer2Symbol(String symbol) {
+        if (symbol.equalsIgnoreCase("X") || symbol.equalsIgnoreCase("O")) {
+            mBinding.player2Symbol.setText(symbol);
+            mBinding.player2Symbol.setVisibility(View.VISIBLE);
+            mBinding.player2Icon.setVisibility(View.GONE);
+        } else {
+            mBinding.player2Icon.setText(symbol);
+            mBinding.player2Symbol.setVisibility(View.GONE);
+            mBinding.player2Icon.setVisibility(View.VISIBLE);
         }
     }
 
@@ -172,6 +226,14 @@ public class GameActivity extends AppCompatActivity {
             int color;
             String name;
             String symbol;
+            boolean isIcon = false;
+
+            public Player(int color, String name, String symbol, boolean isIcon) {
+                this.color = color;
+                this.name = name;
+                this.symbol = symbol;
+                this.isIcon = isIcon;
+            }
 
             public Player(int color, String name, String symbol) {
                 this.color = color;
@@ -195,6 +257,7 @@ public class GameActivity extends AppCompatActivity {
         ItemAdapter(ArrayList<Item> list, boolean isComputer, String player1Name, String player2Name, String player1Symbol, String player2Symbol, int colorX, int colorO) {
             mList = list;
             this.isComputer = isComputer;
+            mMoves = new String[mGridSize][mGridSize];
 //            mPlayer1Name = player1Name;
 //            mPlayer2Name = player2Name;
 //            mPlayer2Symbol = player2Symbol;
@@ -202,16 +265,12 @@ public class GameActivity extends AppCompatActivity {
             mCurrentPlayer = 0;
             mColorX = colorX;
             mColorO = colorO;
-            mPlayerData = new Player[]{new Player(mColorX, player1Name, player1Symbol), new Player(mColorO, player2Name, player2Symbol)};
-            mEmptyPlaces.add(0);
-            mEmptyPlaces.add(1);
-            mEmptyPlaces.add(2);
-            mEmptyPlaces.add(3);
-            mEmptyPlaces.add(4);
-            mEmptyPlaces.add(5);
-            mEmptyPlaces.add(6);
-            mEmptyPlaces.add(7);
-            mEmptyPlaces.add(8);
+            mPlayerData = new Player[]{
+                    player1Symbol.equals("X") || player1Symbol.equals("O") ? new Player(mColorX, player1Name, player1Symbol) : new Player(mColorX, player1Name, player1Symbol, true),
+                    player2Symbol.equals("X") || player2Symbol.equals("O") ? new Player(mColorO, player2Name, player2Symbol) : new Player(mColorO, player2Name, player2Symbol, true)};
+            for (int i = 0; i < mGridSize * mGridSize; i++) {
+                mEmptyPlaces.add(i);
+            }
         }
 
 
@@ -225,6 +284,11 @@ public class GameActivity extends AppCompatActivity {
         private int mColorX = 0xFF4CAF50;
         private int mColorO = 0xffffffff;
         private int mTileAnimationTimeInMilliSeconds = 250;
+        //        private String[] mMoves;
+        private String[][] mMoves;
+        private int mTotalMoves = 0;
+        private int mLastMove = -1;
+        private boolean isGameOver = false;
 
         @Override
         public void onBindViewHolder(@NonNull final ItemHolder holder, int position) {
@@ -278,30 +342,28 @@ public class GameActivity extends AppCompatActivity {
             int position = holder.getAdapterPosition();
 
             if (isMove) {
+                mLastMove = position;
                 playClick();
                 mTotalMoves++;
                 mBinding.score.setText(String.valueOf(mTotalMoves));
                 item.checked = true;
                 mEmptyPlaces.remove(position);
                 // set value
-                mMoves[position] = mPlayerData[mCurrentPlayer].symbol;
+                int row = position / mGridSize;
+                int column = position - (row * mGridSize);
+                mMoves[row][column] = mPlayerData[mCurrentPlayer].symbol;
 
                 holder.mBinding.container.setOnClickListener(null);
-            }
 
-            holder.mBinding.item.setText(mMoves[position]);
-
-            if (isMove) {
-                int[] score = checkScore();
+                int[] score = checkScore(row, column);
                 if (score[0] > -1 && score[0] < mPlayerData.length) {
                     Toast.makeText(GameActivity.this, "Winner is " + mPlayerData[score[0]].name, Toast.LENGTH_SHORT).show();
                     isGameOver = true;
-                    mList.get(score[3]).winner = true;
-                    mList.get(score[1]).winner = true;
-                    mList.get(score[2]).winner = true;
-                    notifyItemChanged(score[3]);
-                    notifyItemChanged(score[1]);
-                    notifyItemChanged(score[2]);
+
+                    for (int i = 1; i < score.length; i++) {
+                        mList.get(score[i]).winner = true;
+                        notifyItemChanged(score[i]);
+                    }
 
                 } else if (score[0] == 2) {
                     Toast.makeText(GameActivity.this, "DRAW", Toast.LENGTH_SHORT).show();
@@ -311,14 +373,35 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
 
+            if (mPlayerData[mCurrentPlayer].isIcon) {
+                holder.mBinding.item.setVisibility(View.GONE);
+                holder.mBinding.icon.setVisibility(View.VISIBLE);
+                holder.mBinding.icon.setText(mPlayerData[mCurrentPlayer].symbol);
+            } else {
+                holder.mBinding.item.setVisibility(View.VISIBLE);
+                holder.mBinding.icon.setVisibility(View.GONE);
+                holder.mBinding.item.setText(mPlayerData[mCurrentPlayer].symbol);
+            }
+            holder.mBinding.item.setText(mPlayerData[mCurrentPlayer].symbol);
+            holder.mBinding.icon.setText(mPlayerData[mCurrentPlayer].symbol);
+
+            if (isMove) {
+
+            }
+
             if (item.winner) {
                 holder.mBinding.item.setTextColor(Color.WHITE);
+                holder.mBinding.icon.setTextColor(Color.WHITE);
                 holder.mBinding.container.setCardBackgroundColor(mPlayerData[mCurrentPlayer].color);
+                holder.mBinding.container.setCardElevation(12);
 
             } else {
                 holder.mBinding.item.setTextColor(mPlayerData[mCurrentPlayer].color);
-
+                holder.mBinding.icon.setTextColor(mPlayerData[mCurrentPlayer].color);
             }
+
+
+            // change player keep it in last
             if (isMove && !isGameOver) {
                 togglePlayer();
                 highlightPlayer(mCurrentPlayer, mPlayerData[mCurrentPlayer].color, Color.WHITE);
@@ -327,103 +410,190 @@ public class GameActivity extends AppCompatActivity {
 
         }
 
-        private int[] checkScore() {
-            String player1WinningCombo = "";
-            String player2WinningCombo = "";
+        //        private int[] checkScore() {
+//            String player1WinningCombo = "";
+//            String player2WinningCombo = "";
+//
+//            for (int i = 0; i < mGridSize; i++) {
+//                player1WinningCombo += mPlayerData[0].symbol;
+//                player2WinningCombo += mPlayerData[1].symbol;
+//
+//            }
+//
+//
+//            int[] values = new int[4];
+//            String val = "";
+//            String val2 = "";
+//            for (int i = 0; i < mMoves.length; i++) {
+//                val2 += mMoves[i];
+//                switch (i) {
+//                    case 0:
+//                        val = mMoves[0] + mMoves[1] + mMoves[2];
+//                        values[1] = 0;
+//                        values[2] = 1;
+//                        values[3] = 2;
+//                        break;
+//
+//                    case 1:
+//                        val = mMoves[3] + mMoves[4] + mMoves[5];
+//                        values[1] = 3;
+//                        values[2] = 4;
+//                        values[3] = 5;
+//
+//                        break;
+//                    case 2:
+//                        val = mMoves[6] + mMoves[7] + mMoves[8];
+//                        values[1] = 6;
+//                        values[2] = 7;
+//                        values[3] = 8;
+//
+//                        break;
+//
+//                    case 3:
+//                        val = mMoves[0] + mMoves[3] + mMoves[6];
+//                        values[1] = 0;
+//                        values[2] = 3;
+//                        values[3] = 6;
+//
+//                        break;
+//                    case 4:
+//                        val = mMoves[1] + mMoves[4] + mMoves[7];
+//                        values[1] = 1;
+//                        values[2] = 4;
+//                        values[3] = 7;
+//
+//                        break;
+//
+//                    case 5:
+//                        val = mMoves[2] + mMoves[5] + mMoves[8];
+//                        values[1] = 2;
+//                        values[2] = 5;
+//                        values[3] = 8;
+//
+//                        break;
+//                    case 6:
+//                        val = mMoves[0] + mMoves[4] + mMoves[8];
+//                        values[1] = 0;
+//                        values[2] = 4;
+//                        values[3] = 8;
+//
+//                        break;
+//
+//                    case 7:
+//                        val = mMoves[2] + mMoves[4] + mMoves[6];
+//                        values[1] = 2;
+//                        values[2] = 4;
+//                        values[3] = 6;
+//
+//                        break;
+//                }
+//                if (val.equals(player1WinningCombo)) {
+//                    values[0] = 0;
+//                    return values;
+//                } else if (val.equals(player2WinningCombo)) {
+//                    values[0] = 1;
+//                    return values;
+//                }
+//            }
+//            if (val2.length() == 9) {
+//                values[0] = 2;
+//                return values;
+//
+//            }
+//            values[0] = -1;
+//            return values;
+//        }
+        private int[] checkScore(int row, int column) {
+//            String player1WinningCombo = "";
+//            String player2WinningCombo = "";
+//
+//            for (int i = 0; i < mGridSize; i++) {
+//                player1WinningCombo += mPlayerData[0].symbol;
+//                player2WinningCombo += mPlayerData[1].symbol;
+//
+//            }
 
-            for (int i = 0; i < mGridSize; i++) {
-                player1WinningCombo += mPlayerData[0].symbol;
-                player2WinningCombo += mPlayerData[1].symbol;
+            boolean hasWon = true;
 
-            }
-
-
-            int[] values = new int[4];
+            int[] values = new int[mGridSize + 1];
             String val = "";
-            String val2 = "";
-            for (int i = 0; i < mMoves.length; i++) {
-                val2 += mMoves[i];
-                switch (i) {
-                    case 0:
-                        val = mMoves[0] + mMoves[1] + mMoves[2];
-                        values[1] = 0;
-                        values[2] = 1;
-                        values[3] = 2;
-                        break;
 
-                    case 1:
-                        val = mMoves[3] + mMoves[4] + mMoves[5];
-                        values[1] = 3;
-                        values[2] = 4;
-                        values[3] = 5;
+            int i = row;
+            int j = column;
+            String symbol = mMoves[i][j];
 
-                        break;
-                    case 2:
-                        val = mMoves[6] + mMoves[7] + mMoves[8];
-                        values[1] = 6;
-                        values[2] = 7;
-                        values[3] = 8;
 
-                        break;
-
-                    case 3:
-                        val = mMoves[0] + mMoves[3] + mMoves[6];
-                        values[1] = 0;
-                        values[2] = 3;
-                        values[3] = 6;
-
-                        break;
-                    case 4:
-                        val = mMoves[1] + mMoves[4] + mMoves[7];
-                        values[1] = 1;
-                        values[2] = 4;
-                        values[3] = 7;
-
-                        break;
-
-                    case 5:
-                        val = mMoves[2] + mMoves[5] + mMoves[8];
-                        values[1] = 2;
-                        values[2] = 5;
-                        values[3] = 8;
-
-                        break;
-                    case 6:
-                        val = mMoves[0] + mMoves[4] + mMoves[8];
-                        values[1] = 0;
-                        values[2] = 4;
-                        values[3] = 8;
-
-                        break;
-
-                    case 7:
-                        val = mMoves[2] + mMoves[4] + mMoves[6];
-                        values[1] = 2;
-                        values[2] = 4;
-                        values[3] = 6;
-
-                        break;
-                }
-                if (val.equals(player1WinningCombo)) {
-                    values[0] = 0;
-                    return values;
-                } else if (val.equals(player2WinningCombo)) {
-                    values[0] = 1;
-                    return values;
+            //check row
+            for (int k = 0; k < mGridSize; k++, j++, j = j % mGridSize) {
+                values[k + 1] = (i * mGridSize) + j;
+                if (TextUtils.isEmpty(mMoves[i][j]) || !mMoves[i][j].equals(symbol)) {
+                    hasWon = false;
+                    break;
                 }
             }
-            if (val2.length() == 9) {
+
+            i = row;
+            j = column;
+            // check column
+            if (!hasWon) {
+                hasWon = true;
+                for (int k = 0; k < mGridSize; k++, i++, i = i % mGridSize) {
+                    values[k + 1] = (i * mGridSize) + j;
+                    if (TextUtils.isEmpty(mMoves[i][j]) || !mMoves[i][j].equals(symbol)) {
+                        hasWon = false;
+                        break;
+                    }
+                }
+            }
+
+            // check diagonal 1
+            i = row;
+            j = column;
+            if (!hasWon) {
+                if (i == j) {
+                    hasWon = true;
+                    for (int k = 0; k < mGridSize; k++, i++, j++, i = i % mGridSize, j = j % mGridSize) {
+                        values[k + 1] = (i * mGridSize) + j;
+                        if (TextUtils.isEmpty(mMoves[i][j]) || !mMoves[i][j].equals(symbol)) {
+                            hasWon = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            // check diagonal 2
+            i = row;
+            j = column;
+            if (!hasWon) {
+                if ((i + j) % mGridSize == mGridSize - 1) {
+                    hasWon = true;
+                    for (int k = 0; k < mGridSize; k++, i++, j = j + mGridSize - 1, i = i % mGridSize, j = j % mGridSize) {
+                        values[k + 1] = (i * mGridSize) + j;
+                        if (TextUtils.isEmpty(mMoves[i][j]) || !mMoves[i][j].equals(symbol)) {
+                            hasWon = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // if somebody won return who won
+            if (hasWon) {
+                values[0] = mCurrentPlayer;
+                return values;
+            }
+
+            // if nobody won and all moves done
+            if (mTotalMoves == mGridSize * mGridSize) {
                 values[0] = 2;
                 return values;
 
             }
+
+            // nobody won and moves remaining
             values[0] = -1;
             return values;
         }
-
-        private String[] mMoves = {"", "", "", "", "", "", "", "", ""};
-        private int mTotalMoves = 0;
-        private boolean isGameOver = false;
 
         @Override
         public int getItemCount() {

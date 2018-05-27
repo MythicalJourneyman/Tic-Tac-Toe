@@ -25,6 +25,18 @@
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/item"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="#000"
+                    android:textSize="48sp"
+                    android:textStyle="bold"/>
+
+                <com.mythicaljourneyman.tic_tac_toe.views.widgets.IconTextView
+                    android:id="@+id/icon"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

@@ -21,6 +21,48 @@
             android:textSize="48sp"
             android:textStyle="bold"/>
 
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/choose_board"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="@string/choose_board_size"
+            android:textAllCaps="true"/>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/choose_board"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/threeGrid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="3 X 3"
+                android:textColor="#fff"
+                android:textSize="48sp"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/fourGrid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="4 X 4"
+                android:textColor="#fff"
+                android:textSize="48sp"/>
+        </android.support.v7.widget.LinearLayoutCompat>
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/twoPlayer"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
