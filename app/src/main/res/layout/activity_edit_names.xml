@@ -6,9 +6,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/container"
-        android:background="@drawable/settings_window_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/settings_window_background"
         android:padding="12dp"
         tools:context=".views.activities.EditNamesActivity">
 
@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
+            android:singleLine="true"
             android:text="@string/player1"
             android:textColor="#fff"
             android:textSize="48sp"
@@ -64,6 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:gravity="center"
+            android:singleLine="true"
             android:text="@string/player2"
             android:textColor="#fff"
             android:textSize="48sp"

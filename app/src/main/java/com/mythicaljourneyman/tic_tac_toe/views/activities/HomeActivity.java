@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
         mBinding.singlePlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(GameActivity.getStartIntentForSinglePlayer(HomeActivity.this, AppPreferences.getPlayer1Name(HomeActivity.this), AppPreferences.getPlayer1Symbol(HomeActivity.this)));
+                startActivity(GameActivity.getStartIntentForSinglePlayer(HomeActivity.this, AppPreferences.getPlayer1Name(HomeActivity.this), AppPreferences.getPlayer1Symbol(HomeActivity.this), AppPreferences.getPlayer2Symbol(HomeActivity.this)));
             }
         });
         mBinding.chooseNames.setOnClickListener(new View.OnClickListener() {

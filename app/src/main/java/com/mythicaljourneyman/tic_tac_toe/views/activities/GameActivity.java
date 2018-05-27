@@ -50,10 +50,11 @@ public class GameActivity extends AppCompatActivity {
         return intent;
     }
 
-    public static Intent getStartIntentForSinglePlayer(Context context, String player1Name, String player1Symbol) {
+    public static Intent getStartIntentForSinglePlayer(Context context, String player1Name, String player1Symbol, String player2Symbol) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(PLAYER_1_NAME, player1Name);
         intent.putExtra(PLAYER_1_SYMBOL, player1Symbol);
+        intent.putExtra(PLAYER_2_SYMBOL, player2Symbol);
         return intent;
     }
 
@@ -63,6 +64,12 @@ public class GameActivity extends AppCompatActivity {
     public void onBackPressed() {
         //finish game on back press
         endGame();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMediaPlayer = null;
     }
 
     @Override
@@ -80,11 +87,6 @@ public class GameActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(player2Name)) {
             player2Name = "Computer";
             isComputer = true;
-            if (player1Symbol.equals("X")) {
-                player2Symbol = "O";
-            } else {
-                player2Symbol = "X";
-            }
         }
 
 
@@ -94,6 +96,8 @@ public class GameActivity extends AppCompatActivity {
 
         initializeViews(player1Name, player2Name, player1Symbol, player2Symbol, isComputer);
     }
+
+    MediaPlayer mMediaPlayer;
 
     private void initializeViews(String player1Name, String player2Name, String player1Symbol, String player2Symbol, boolean isComputer) {
         // set player names and symbols
@@ -115,7 +119,7 @@ public class GameActivity extends AppCompatActivity {
         // prepare data for the grid
         ArrayList<Item> list = new ArrayList<>();
         for (int i = 0; i < totalItems; i++) {
-            list.add(new Item(""));
+            list.add(new Item());
         }
 
         int colorX = ContextCompat.getColor(this, R.color.colorX);
@@ -127,12 +131,9 @@ public class GameActivity extends AppCompatActivity {
 //        mBinding.list.setLayoutAnimation(new LayoutAnimationController(new AlphaAnimation(0,1)));
 //        mBinding.list.setItemAnimator(new DefaultItemAnimator());
         mBinding.list.setAdapter(new ItemAdapter(list, isComputer, player1Name, player2Name, player1Symbol, player2Symbol, colorX, colorO));
+        mMediaPlayer = MediaPlayer.create(this, R.raw.click);
 
-        if (player1Symbol.equals("X")) {
-            highlightPlayer(0, colorX, Color.WHITE);
-        } else {
-            highlightPlayer(0, colorO, Color.WHITE);
-        }
+        highlightPlayer(0, colorX, Color.WHITE);
 
     }
 
@@ -154,41 +155,54 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void playClick() {
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.click);
-        mediaPlayer.start();
+        mMediaPlayer.start();
     }
 
     class Item {
-        Item(String value) {
-            this.value = value;
-        }
 
         boolean winner = false;
         boolean checked = false;
-        String value;
+        boolean makeMove = false;
     }
 
     class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
         private ArrayList<Item> mList;
 
-        String mCurrentPlayer = "X";
-        String mPlayer2Symbol = "O";
-        String mPlayer1Symbol = "X";
-        String mPlayer1Name = "X";
-        String mPlayer2Name = "O";
+        class Player {
+            int color;
+            String name;
+            String symbol;
+
+            public Player(int color, String name, String symbol) {
+                this.color = color;
+                this.name = name;
+                this.symbol = symbol;
+            }
+
+            public Player() {
+            }
+        }
+
+        int mCurrentPlayer = 0;
+        //        String mPlayer2Symbol = "O";
+//        String mPlayer1Symbol = "X";
+//        String mPlayer1Name = "X";
+//        String mPlayer2Name = "O";
+        Player[] mPlayerData;
         boolean isComputer;
         HashSet<Integer> mEmptyPlaces = new HashSet<>();
 
         ItemAdapter(ArrayList<Item> list, boolean isComputer, String player1Name, String player2Name, String player1Symbol, String player2Symbol, int colorX, int colorO) {
             mList = list;
             this.isComputer = isComputer;
-            mPlayer1Name = player1Name;
-            mPlayer2Name = player2Name;
-            mPlayer2Symbol = player2Symbol;
-            mPlayer1Symbol = player1Symbol;
-            mCurrentPlayer = player1Symbol;
+//            mPlayer1Name = player1Name;
+//            mPlayer2Name = player2Name;
+//            mPlayer2Symbol = player2Symbol;
+//            mPlayer1Symbol = player1Symbol;
+            mCurrentPlayer = 0;
             mColorX = colorX;
             mColorO = colorO;
+            mPlayerData = new Player[]{new Player(mColorX, player1Name, player1Symbol), new Player(mColorO, player2Name, player2Symbol)};
             mEmptyPlaces.add(0);
             mEmptyPlaces.add(1);
             mEmptyPlaces.add(2);
@@ -224,8 +238,8 @@ public class GameActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (!isGameOver) {
                             updatePosition(holder, item, true);
-                            if (!isGameOver && isComputer && mCurrentPlayer.equals(mPlayer2Symbol)) {
-                                makeComputerMove(mPlayer2Symbol);
+                            if (!isGameOver && isComputer && mCurrentPlayer == 1) {
+                                makeComputerMove();
                             }
                         }
                     }
@@ -233,14 +247,14 @@ public class GameActivity extends AppCompatActivity {
             } else {
                 if (item.winner) {
                     updatePosition(holder, item, false);
-                } else if (!TextUtils.isEmpty(item.value)) {
+                } else if (item.makeMove) {
                     updatePosition(holder, item, true);
                 }
             }
 
         }
 
-        private void makeComputerMove(String computerSymbol) {
+        private void makeComputerMove() {
             int position = -1;
             ArrayList<Integer> list = new ArrayList<>(mEmptyPlaces);
             Collections.shuffle(list);
@@ -248,24 +262,29 @@ public class GameActivity extends AppCompatActivity {
                 position = list.get(0);
             }
             if (position > -1 && position < mList.size()) {
-                mList.get(position).value = computerSymbol;
+                mList.get(position).makeMove = true;
                 mList.get(position).checked = true;
                 mBinding.list.findViewHolderForAdapterPosition(position).itemView.performClick();
             }
 
         }
 
+        private void togglePlayer() {
+            mCurrentPlayer++;
+            mCurrentPlayer = mCurrentPlayer % 2;
+        }
+
         private void updatePosition(ItemHolder holder, Item item, boolean isMove) {
             int position = holder.getAdapterPosition();
 
             if (isMove) {
-
+                playClick();
                 mTotalMoves++;
                 mBinding.score.setText(String.valueOf(mTotalMoves));
                 item.checked = true;
                 mEmptyPlaces.remove(position);
                 // set value
-                mMoves[position] = mCurrentPlayer;
+                mMoves[position] = mPlayerData[mCurrentPlayer].symbol;
 
                 holder.mBinding.container.setOnClickListener(null);
             }
@@ -274,12 +293,8 @@ public class GameActivity extends AppCompatActivity {
 
             if (isMove) {
                 int[] score = checkScore();
-                if (score[0] == 0) {
-                    if (mPlayer1Symbol.equals("X")) {
-                        Toast.makeText(GameActivity.this, "Winner is " + mPlayer1Name, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(GameActivity.this, "Winner is " + mPlayer2Name, Toast.LENGTH_SHORT).show();
-                    }
+                if (score[0] > -1 && score[0] < mPlayerData.length) {
+                    Toast.makeText(GameActivity.this, "Winner is " + mPlayerData[score[0]].name, Toast.LENGTH_SHORT).show();
                     isGameOver = true;
                     mList.get(score[3]).winner = true;
                     mList.get(score[1]).winner = true;
@@ -287,19 +302,7 @@ public class GameActivity extends AppCompatActivity {
                     notifyItemChanged(score[3]);
                     notifyItemChanged(score[1]);
                     notifyItemChanged(score[2]);
-                } else if (score[0] == 1) {
-                    if (mPlayer1Symbol.equals("O")) {
-                        Toast.makeText(GameActivity.this, "Winner is " + mPlayer1Name, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(GameActivity.this, "Winner is " + mPlayer2Name, Toast.LENGTH_SHORT).show();
-                    }
-                    isGameOver = true;
-                    mList.get(score[3]).winner = true;
-                    mList.get(score[1]).winner = true;
-                    mList.get(score[2]).winner = true;
-                    notifyItemChanged(score[3]);
-                    notifyItemChanged(score[1]);
-                    notifyItemChanged(score[2]);
+
                 } else if (score[0] == 2) {
                     Toast.makeText(GameActivity.this, "DRAW", Toast.LENGTH_SHORT).show();
                     isGameOver = true;
@@ -308,47 +311,33 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
 
-            if (mCurrentPlayer.equals("X")) {
-                if (item.winner) {
-                    holder.mBinding.item.setTextColor(Color.WHITE);
-                    holder.mBinding.container.setCardBackgroundColor(mColorX);
+            if (item.winner) {
+                holder.mBinding.item.setTextColor(Color.WHITE);
+                holder.mBinding.container.setCardBackgroundColor(mPlayerData[mCurrentPlayer].color);
 
-                } else {
-                    holder.mBinding.item.setTextColor(mColorX);
-
-                }
-                if (isMove && !isGameOver) {
-                    mCurrentPlayer = "O";
-                    if (mPlayer1Symbol.equals(mCurrentPlayer)) {
-                        highlightPlayer(0, mColorO, Color.WHITE);
-                    } else {
-                        highlightPlayer(1, mColorO, Color.WHITE);
-                    }
-                }
             } else {
-                if (item.winner) {
-                    holder.mBinding.item.setTextColor(Color.WHITE);
-                    holder.mBinding.container.setCardBackgroundColor(mColorO);
-                    holder.mBinding.container.setCardElevation(12);
+                holder.mBinding.item.setTextColor(mPlayerData[mCurrentPlayer].color);
 
-                } else {
-                    holder.mBinding.item.setTextColor(mColorO);
-
-                }
-                if (isMove && !isGameOver) {
-                    mCurrentPlayer = "X";
-                    if (mPlayer1Symbol.equals(mCurrentPlayer)) {
-                        highlightPlayer(0, mColorX, Color.WHITE);
-                    } else {
-                        highlightPlayer(1, mColorX, Color.WHITE);
-                    }
-                }
+            }
+            if (isMove && !isGameOver) {
+                togglePlayer();
+                highlightPlayer(mCurrentPlayer, mPlayerData[mCurrentPlayer].color, Color.WHITE);
             }
 
 
         }
 
         private int[] checkScore() {
+            String player1WinningCombo = "";
+            String player2WinningCombo = "";
+
+            for (int i = 0; i < mGridSize; i++) {
+                player1WinningCombo += mPlayerData[0].symbol;
+                player2WinningCombo += mPlayerData[1].symbol;
+
+            }
+
+
             int[] values = new int[4];
             String val = "";
             String val2 = "";
@@ -415,10 +404,10 @@ public class GameActivity extends AppCompatActivity {
 
                         break;
                 }
-                if (val.equals("XXX")) {
+                if (val.equals(player1WinningCombo)) {
                     values[0] = 0;
                     return values;
-                } else if (val.equals("OOO")) {
+                } else if (val.equals(player2WinningCombo)) {
                     values[0] = 1;
                     return values;
                 }
