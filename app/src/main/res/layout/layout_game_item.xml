@@ -31,7 +31,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000"
-                    android:textSize="48sp"
+                    android:textSize="48dp"
                     android:textStyle="bold"/>
 
                 <com.mythicaljourneyman.tic_tac_toe.views.widgets.IconTextView
@@ -42,7 +42,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000"
-                    android:textSize="48sp"
+                    android:textSize="48dp"
                     android:textStyle="bold"/>
 
             </FrameLayout>
